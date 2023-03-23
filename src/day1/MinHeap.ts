@@ -22,8 +22,8 @@ export default class MinHeap {
         }
         const lastElem = this.data.pop() ?? 0
         this.data[0] = lastElem
-        this.heapifyDown(0)
         this.length--
+        this.heapifyDown(0)
         return firstElem
         
     }
