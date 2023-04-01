@@ -1,27 +1,84 @@
 export default class ArrayList<T> {
-    public length: number;
+  length = 0;
+  private data: (T | undefined)[];
 
-    
+  constructor(private capacity = 10) {
+    this.data = Array.from({ length: capacity }, () => undefined);
+  }
 
-    constructor() {
+  get(idx: number): T | undefined {
+    if (idx < 0 || idx >= this.length) {
+      return undefined;
+    }
+    return this.data[idx];
+  }
+
+  append(item: T): void {
+    if (this.length === this.capacity) {
+      this.grow();
+    }
+    this.data[this.length] = item;
+    this.length++;
+  }
+
+  prepend(item: T): void {
+    this.insertAt(item, 0);
+  }
+
+  insertAt(item: T, idx: number): void {
+    if (idx < 0 || idx > this.length) {
+      throw new Error("Index out of range");
     }
 
-    prepend(item: T): void {
+    if (this.length === this.capacity) {
+      this.grow();
+    }
 
-}
-    insertAt(item: T, idx: number): void {
+    for (let i = this.length - 1; i >= 0; i--) {
+      this.data[i + 1] = this.data[i];
+    }
 
-}
-    append(item: T): void {
+    this.data[idx] = item;
+    this.length++;
+  }
 
-}
-    remove(item: T): T | undefined {
+  remove(item: T): T | undefined {
+    for (let i = 0; i < this.length; i++) {
+      let value = this.data[i];
+      if (value == item) {
+        this.removeAt(i);
+        return value;
+      }
+    }
+    return undefined;
+  }
 
-}
-    get(idx: number): T | undefined {
+  removeAt(idx: number): T | undefined {
+    if (idx < 0 || idx > this.length) {
+      return undefined;
+    }
 
-}
-    removeAt(idx: number): T | undefined {
+    var value = this.data[idx];
+    for (let i = idx; i < this.length - 1; i++) {
+      this.data[i] = this.data[i + 1];
+    }
+    this.data[this.length] = undefined;
+    this.length--;
+    return value;
+  }
 
-}
+  private grow(): void {
+    this.capacity *= 2;
+
+    var data: (T | undefined)[] = Array.from(
+      { length: this.capacity },
+      () => undefined,
+    );
+
+    for (let i = 0; i < this.data.length; i++) {
+      data[i] = this.data[i];
+    }
+
+    this.data = data;
+  }
 }
